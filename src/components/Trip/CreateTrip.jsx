@@ -18,6 +18,7 @@ import { app, db } from '../service/firebaseConfig';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar';
+import Footer from '../Footer';
 
 function CreateTrip() {
   const [place, setPlace] = useState();
@@ -129,8 +130,8 @@ function CreateTrip() {
   return (
     <>
     <Navbar />
-    <div className='sm:px-10 md:px-32 lg:px-56 px-5 mt-40'>
-      <h2 className='font-bold text-3xl'>Tell us your travel preferences🏕️🌴</h2>
+    <div className="relative  bg-gradient-to-br from-gray-900 to-gray-800 text-white px-5 sm:px-10 md:px-32 lg:px-56 pt-40">
+    <h2 className='font-bold text-3xl'>Tell us your travel preferences🏕️🌴</h2>
       <p className='mt-3 text-gray-500 text-xl'>Just provide some basic information, and our trip planner will generate a customized itinerary based on your preferences.</p>
 
       <div className='mt-20 flex flex-col gap-10'>
@@ -143,10 +144,12 @@ function CreateTrip() {
     setPlace(e.target.value);
     fetchLocations(e.target.value);
   }}
+  className="bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500"
+
 />
 
 {locationSuggestions.length > 0 && (
-  <ul className="border mt-2 rounded-lg shadow-md bg-white">
+              <ul className="border mt-2 rounded-lg shadow-md bg-gray-700">
     {locationSuggestions.map((loc) => (
       <li
         key={loc.place_id}
@@ -159,8 +162,8 @@ function CreateTrip() {
           setPlace(loc.display_name);
           setLocationSuggestions([]);
         }}
-        className="p-2 hover:bg-gray-200 cursor-pointer"
-      >
+        className="p-2 hover:bg-gray-600 cursor-pointer text-white"
+        >
         {loc.display_name}
       </li>
     ))}
@@ -181,7 +184,11 @@ function CreateTrip() {
             {SelectBudgetOptions.map((item, index) => (
               <div key={index}
                 onClick={() => handleInputChange('budget', item.title)}
-                className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData?.budget == item.title && 'shadow-lg border-black'}`}>
+                className={`p-4 border cursor-pointer rounded-lg transition-all duration-300 ${
+                    formData?.budget === item.title
+                      ? "border-blue-500 shadow-lg bg-gray-800 animate-glow"
+                      : "border-gray-600 hover:border-blue-400 hover:shadow-md"
+                  }`}>
                 <h2 className='text-4xl'>{item.icon}</h2>
                 <h2 className='font-bold text-lg'>{item.title}</h2>
                 <h2 className='text-sm text-gray-500'>{item.desc}</h2>
@@ -196,7 +203,11 @@ function CreateTrip() {
             {SelectTravelList.map((item, index) => (
               <div key={index}
                 onClick={() => handleInputChange('traveler', item.people)}
-                className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData?.traveler == item.people && 'shadow-lg border-black'}`}>
+                className={`p-4 border cursor-pointer rounded-lg transition-all duration-300 ${
+                    formData?.traveler === item.people
+                      ? "border-blue-500 shadow-lg bg-gray-800 animate-glow"
+                      : "border-gray-600 hover:border-blue-400 hover:shadow-md"
+                  }`}>
                 <h2 className='text-4xl'>{item.icon}</h2>
                 <h2 className='font-bold text-lg'>{item.title}</h2>
                 <h2 className='text-sm text-gray-500'>{item.desc}</h2>
@@ -204,14 +215,44 @@ function CreateTrip() {
             ))}
           </div>
         </div>
+        <div className="my-10 flex justify-end">
+  <Button
+    disabled={loading}
+    onClick={onGenerateTrip}
+    className={`relative px-6 py-6  mt-4 text-lg font-semibold tracking-wide cursor-pointer transition-all duration-300
+        ${
+          loading ? "bg-gray-800 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800"
+        } text-white border border-gray-700 rounded-lg shadow-lg
+        hover:shadow-indigo-500/30 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+        ${
+          !loading &&
+          "before:absolute before:-inset-1 before:bg-gradient-to-r before:from-gray-800 before:via-gray-700 before:to-gray-800 before:blur-md before:opacity-40"
+        }`}
+  >
+    {loading ? (
+      <div className="flex items-center gap-2">
+        <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin text-blue-300" />
+        <span className="animate-pulse">Generating...</span>
+      </div>
+    ) : (
+      <span>🚀 Generate Trip</span>
+    )}
+  </Button>
+</div>
       </div>
 
-      <div className='my-10 justify-end flex'>
-        <Button disabled={loading} onClick={onGenerateTrip}>
-          {loading ? <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' /> : 'Generate Trip'}
-        </Button>
-      </div>
 
+
+      <style>
+        {`
+          @keyframes glow {
+            0% { box-shadow: 0 0 5px blue; }
+            50% { box-shadow: 0 0 20px blue; }
+            100% { box-shadow: 0 0 5px blue; }
+          }
+          .animate-glow { animation: glow 1.5s infinite alternate; }
+        `}
+      </style>
       <Dialog open={openDialog}>
         <DialogContent>
           <DialogHeader>
@@ -231,6 +272,10 @@ function CreateTrip() {
 
 
     </div>
+    <div className=''>
+    <Footer />
+    </div>
+    
     </>
   )
 }
