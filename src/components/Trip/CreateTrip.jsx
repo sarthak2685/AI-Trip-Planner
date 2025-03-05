@@ -1,7 +1,6 @@
 import { Input } from '../ui/input';
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelList } from '../details/TravelDetail';
 import React, { useEffect, useState } from 'react'
-import { Autocomplete } from "@react-google-maps/api";
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { chatSession } from '../service/AIModel';
